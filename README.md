@@ -15,3 +15,5 @@ Extract the folder in Discord Bot Makers base directory
 Restart Discord Bot Maker
 
 Remember to extract it in your projects directory as well if you want it in your bot!
+
+Thanks to Tresmos for the help with testing!
