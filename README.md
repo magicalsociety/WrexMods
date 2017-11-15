@@ -1,5 +1,8 @@
 # DBM-webapi-parsing
 
+# Forum topic and example
+https://dbotmaker.io/forums/threads/create-variable-from-json-webapi.85/
+
  # Changes
      * Can now use variables in the URL and Path textboxes.
      * added console logging to print what's going on in your bots console.
