@@ -27,7 +27,7 @@ Remember to extract it in your projects directory as well if you want it in your
 If you want to help, just fork it out, make your changes and do a pull request!
 
 Here is a link to the github pages that contains the current menu for this action
-https://generalwrex.github.io/DBM-webapi-parsing/docs/
+https://generalwrex.github.io/DBM-webapi-parsing
 
 
  # How to get the path
