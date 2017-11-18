@@ -29,6 +29,10 @@ If you want to help, just fork it out, make your changes and do a pull request!
 Here is a link to the github pages that contains the current menu for this action
 https://generalwrex.github.io/DBM-webapi-parsing
 
+ # Path Finder 
+  **A Helper program to get the JSON Path for this mod**
+    You can find it here!
+    https://github.com/generalwrex/DBM-WebAPI-Parser-PathFinder
 
  # How to get the path
  
