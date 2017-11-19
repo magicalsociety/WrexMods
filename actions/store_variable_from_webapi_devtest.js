@@ -18,7 +18,7 @@ module.exports = {
     // This is the name of the action displayed in the editor.
     //---------------------------------------------------------------------
 
-    name: "Store Variable From WebAPI",
+    name: "[test] Store Variable From WebAPI",
 
     //---------------------------------------------------------------------
     // Action Section
@@ -35,7 +35,7 @@ module.exports = {
     //---------------------------------------------------------------------
 
     subtitle: function(data) {
-        return `${data.varName} | JSON Var: ${data.jsonStorageVarName} Path: ${data.path}`;
+        return `${data.varName} | JSON Var: ${data.jsonStorageVarName} | Path: ${data.path}`;
     },
 
     //---------------------------------------------------------------------
@@ -46,7 +46,7 @@ module.exports = {
 
     variableStorage: function(data, varType) {
         const type = parseInt(data.storage);
-		if (type !== varType) return;
+        if (type !== varType) return;       
         return ([data.varName, 'JSON Object']);
     },
 
@@ -58,7 +58,7 @@ module.exports = {
     // are also the names of the fields stored in the action's JSON data.
     //---------------------------------------------------------------------
 
-    fields: ["behavior", "url", "path", "storage", "varName", "jsonStorageVarName", "jsonStorage"],
+    fields: ["behavior", "url", "path", "storage", "varName", "storage2","jsonStorageVarName", "jsonStorage"],
 
     //---------------------------------------------------------------------
     // Command HTML
@@ -91,9 +91,17 @@ module.exports = {
 			<input id="url" class="round" placeholder="If blank Json Storage is used." style="width: 90%; type="text";><br> 
 			
 		</div>
-		<div>
-			Json Storage Variable Name:  <br>
-			<input id="jsonStorageVarName" class="round"  style="width: 60%; type="text";><br>  
+        <div>
+            <div style="float: left; width: 35%;">
+                Store In:<br>
+                <select id="storage2" class="round" onchange="glob.variableChange(this, 'varNameContainer2')">
+                    ${data.variables[0]}
+                </select>
+            </div>
+            <div id="varNameContainer2" style="display: none; float: right; width: 55%;">
+			    Json Storage Variable Name:  <br>
+                <input id="jsonStorageVarName" class="round" type="text";><br>  
+            </div>
 		</div>
 		</div>
 			JSON Path:  <br>
@@ -129,6 +137,7 @@ module.exports = {
             document
         } = this;
         glob.variableChange(document.getElementById('storage'), 'varNameContainer');
+        glob.variableChange(document.getElementById('storage2'), 'varNameContainer2');
     },
 
     //---------------------------------------------------------------------
@@ -140,57 +149,92 @@ module.exports = {
     //---------------------------------------------------------------------
 
     action: function(cache) {
-        const _this = this;
+        //const _this = this;
 
         const data = cache.actions[cache.index];
         
         const varName = this.evalMessage(data.varName, cache);
         const storage = parseInt(data.storage);
+        const storage2 = parseInt(data.storage2);
         const url = this.evalMessage(data.url, cache);
         const path = this.evalMessage(data.path, cache);
-
-		const jsonStorageVar = this.evalMessage(data.jsonStorageVarName, cache);
-		
+		const jsonStorageVarName = this.evalMessage(data.jsonStorageVarName, cache);		
         const jsonStorage = data.jsonStorage;
 
-		let result;
-
+		
         try {
             if (url && jsonStorage) {
                 console.log('WebAPI Parser: URL and JSON Data exists, saving data from URL: ' + url);
-                GetJSONFromURL(); // refresh the saved json
+                var myData = GetJSONFromURL(url, path, varName, jsonStorageVarName, cache); // refresh the saved json
+
+                if(myData.result && varName){
+                    this.storeValue(myData.result, storage, varName, cache);
+                    console.log("WebAPI Parser: Saved Result");
+                }
+                
+                if(jsonStorageVarName){
+                    this.storeValue(jsonStorage, storage2, jsonStorageVarName, cache);
+                    console.log("WebAPI Parser: Saved JsonStorage");
+                }
+
+                if (data.behavior === "0") {
+                    this.callNextAction(cache);
+                }
 
             } else if (!url && jsonStorage) {
-                console.log('WebAPI Parser: Using saved JSON under variable name: ' + jsonStorageVar);
-                GetSavedJSON(); // use the saved json if it exists
+                console.log('WebAPI Parser: Using saved JSON under variable name: ' + jsonStorageVarName);
+                try {
+                    if (path && jsonStorage) {
+                        var result = eval("jsonStorage." + path);
+                        console.log("WebAPI Parser: The Parse result returned: " + result);
+                        
+                        if(jsonStorageVarName){
+                            this.storeValue(jsonStorage, storage2, jsonStorageVarName, cache);
+                            console.log("WebAPI Parser: Saved JsonStorage");
+                        }
+        
+                        if (data.behavior === "0") {
+                            this.callNextAction(cache);
+                        }
+                    }
+                } catch (err) {
+                    console.log("WebAPI Parser: Saved JSON Error: " + err);
+                }
 
             } else if (url && !jsonStorage) {
                 console.log('WebAPI Parser: URL Exists, JSON Data does not, saving data from URL: ' + url);
-                GetJSONFromURL();
-      
+                var myData = GetJSONFromURL(url, path, varName, jsonStorageVarName, cache); 
+
+                if(myData.result && varName){
+                    this.storeValue(myData.result, storage, varName, cache);
+                    console.log("WebAPI Parser: Saved Result");
+                }
+                
+                if(jsonStorageVarName){
+                    this.storeValue(jsonStorage, storage2, jsonStorageVarName, cache);
+                    console.log("WebAPI Parser: Saved JsonStorage");
+                }
+
                 if (data.behavior === "0") {
-                    _this.callNextAction(cache);
+                    console.log("WebAPI Parser: Calling Next Action");
+                    this.callNextAction(cache);
                 }
             } else {
-                GetJSONFromURL(); // default to getting new data
+                GetJSONFromURL(url, path, varName, jsonStorageVarName, cache); // default to getting new data
             }
         } catch (error) {
             console.log("WebAPI Parser: Main Function Error: " + error);
         }
 
-        function GetSavedJSON() {
 
-            try {
-                if (path && jsonStorage) {
-                    result = eval("jsonStorage." + path);
-                    console.log("WebAPI Parser: The Parse result returned: " + result);
-                }
-            } catch (err) {
-                console.log("WebAPI Parser: Saved JSON Error: " + err);
-            }
-        }
+        function GetJSONFromURL(url, path, varName, jsonStorageVarName, cache) {
 
-        function GetJSONFromURL() {
+            var myData = {};
+            myData.result = null;
+            myData.jsonStorage = null;
+
+            let result;
+
             try {
                 if (url && path) {
                     var request = require('request');
@@ -204,32 +248,27 @@ module.exports = {
                         if (err) {
                             result = "error: " + err;
                             console.log("WebAPI Parser: The Parse result returned an error: " + result);
+                            myData.result = result;
                         } else if (res.statusCode !== 200) {
                             result = "status: " + res.statusCode;
                             console.log("WebAPI Parser: The Parse result returned an error: " + result);
+                            myData.result = result;
 						}else{
                             jsonstorage = jsonData;
                             result = eval("jsonData." + path, cache);
-                            console.log("WebAPI Parser: The Parse result returned: " + result);                                                                                                       
+
+                            myData.result = result;
+                            myData.jsonStorage = jsonStorage;
+
+                            console.log("WebAPI Parser: The Parse result returned: " + result);                            
                         }
-                    });
+                    });                  
+                    return myData;
                 }
             } catch (err) {
                 console.log("WebAPI Parser: GetJSONFromURL Error: " + err);
             }
-        }
-
-		if(result && varName){
-			this.storeValue(result, storage, varName, cache);
-		}
-		
-		if(jsonStorage && jsonStorage){
-			this.storeValue(jsonStorage, storage, jsonStorageVar, cache);
-		}
-       
-        if (data.behavior === "0") {
-            this.callNextAction(cache);
-        }
+        }  
     },
 
     //---------------------------------------------------------------------
