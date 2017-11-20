@@ -9,47 +9,47 @@ module.exports = {
 	// will return object.name
 	// in this example the variable would contain "[DEV] Version 1.2.2.3"
 	//---------------------------------------------------------------------
-		
-		
-		
+
+
+
 	//---------------------------------------------------------------------
 	// Action Name
 	//
 	// This is the name of the action displayed in the editor.
 	//---------------------------------------------------------------------
-	
-	name: "Store Variable From WebAPI",
-	
+
+	name: "Store Variable From WebAPI 2",
+
 	//---------------------------------------------------------------------
 	// Action Section
 	//
 	// This is the section the action will fall into.
 	//---------------------------------------------------------------------
-	
+
 	section: "JSON WebAPI Parsing",
-	
+
 	//---------------------------------------------------------------------
 	// Action Subtitle
 	//
 	// This function generates the subtitle displayed next to the name.
 	//---------------------------------------------------------------------
-	
+
 	subtitle: function(data) {
 		return `${data.varName}`;
 	},
-	
+
 	//---------------------------------------------------------------------
 	// Action Storage Function
 	//
 	// Stores the relevant variable info for the editor.
 	//---------------------------------------------------------------------
-	
+
 	variableStorage: function(data, varType) {
 		const type = parseInt(data.storage);
 		if(type !== varType) return;
 		return ([data.varName, 'JSON Object']);
 	},
-	
+
 	//---------------------------------------------------------------------
 	// Action Fields
 	//
@@ -57,43 +57,40 @@ module.exports = {
 	// by creating elements with corresponding IDs in the HTML. These
 	// are also the names of the fields stored in the action's JSON data.
 	//---------------------------------------------------------------------
-	
-	fields: ["behavior", "url", "path", "storage", "varName"],
-	
+
+	fields: ["behavior", "url", "path", "storage", "varName", "varNameContainer"],
+
 	//---------------------------------------------------------------------
 	// Command HTML
 	//
 	// This function returns a string containing the HTML used for
-	// editing actions. 
+	// editing actions.
 	//
 	// The "isEvent" parameter will be true if this action is being used
-	// for an event. Due to their nature, events lack certain information, 
+	// for an event. Due to their nature, events lack certain information,
 	// so edit the HTML to reflect this.
 	//
-	// The "data" parameter stores constants for select elements to use. 
+	// The "data" parameter stores constants for select elements to use.
 	// Each is an array: index 0 for commands, index 1 for events.
-	// The names are: sendTargets, members, roles, channels, 
+	// The names are: sendTargets, members, roles, channels,
 	//                messages, servers, variables
 	//---------------------------------------------------------------------
-	
+
 	html: function(isEvent, data) {
 		return `
-	<div>
-	<div style="float: left; width: 75%;">
 	<div>
 		End Behavior:<br>
 		<select id="behavior" class="round">
 			<option value="0" selected>Call Next Action Automatically</option>
 			<option value="1">Do Not Call Next Action</option>
 		</select>
-	<div><br><br><br>
-		WebAPI URL:  <br>
-		<input id="url" class="round"  style="width: 90%; type="text";><br>  
+	<div><br>
+		WebAPI URL:
+		<input id="url" class="round"  style="width: 90%; type="text";>
 	</div>
-	</div><br>
-		JSON Path:  <br>
-		<input id="path" class="round"; style="width: 75%; type="text";><br>  
-	<div><br><br> 
+	<div><br>
+		JSON Path:
+		<input id="path" class="round"; style="width: 75%; type="text";><br>
 	<div style="float: left; width: 35%;">
 		Store In:<br>
 		<select id="storage" class="round" onchange="glob.variableChange(this, 'varNameContainer')">
@@ -103,10 +100,9 @@ module.exports = {
 	<div id="varNameContainer" style="display: none; float: right; width: 60%;">
 		Variable Name:<br>
 		<input id="varName" class="round" type="text">
-	</div>
 	</div>`
 	},
-	
+
 	//---------------------------------------------------------------------
 	// Action Editor Init Code
 	//
@@ -114,20 +110,20 @@ module.exports = {
 	// is also run. This helps add modifications or setup reactionary
 	// functions for the DOM elements.
 	//---------------------------------------------------------------------
-	
+
 	init: function() {
 		const {glob, document} = this;
 		glob.variableChange(document.getElementById('storage'), 'varNameContainer');
 	},
-	
+
 	//---------------------------------------------------------------------
 	// Action Bot Function
 	//
 	// This is the function for the action within the Bot's Action class.
-	// Keep in mind event calls won't have access to the "msg" parameter, 
+	// Keep in mind event calls won't have access to the "msg" parameter,
 	// so be sure to provide checks for variable existance.
 	//---------------------------------------------------------------------
-	
+
 	action: function(cache) {
 
 		const data = cache.actions[cache.index];
@@ -136,7 +132,7 @@ module.exports = {
 		const storage = parseInt(data.storage);
 		const url = this.evalMessage(data.url, cache);
 		const path = this.evalMessage(data.path, cache);
-				
+
 		if(url){
 			if(path){
 				var request = require('request');
@@ -154,20 +150,18 @@ module.exports = {
 					  console.log("The Parse result returned an error: " + result);
 					  this.storeValue(result, storage, varName, cache);
 					} else {
-					  result = eval("jsonData." + path, cache);	
+					  result = eval("jsonData." + path, cache);
 					  console.log("The Parse result returned: " + result);
-					  this.storeValue(result, storage, varName, cache);			  					  
+					  this.storeValue(result, storage, varName, cache);
 					  if(data.behavior === "0") {
 						  this.callNextAction(cache);
 					  }
 					}
 				});
-								
-				
 			}
 		}
 	},
-	
+
 	//---------------------------------------------------------------------
 	// Action Bot Mod
 	//
@@ -176,8 +170,8 @@ module.exports = {
 	// In order to reduce conflictions between mods, be sure to alias
 	// functions you wish to overwrite.
 	//---------------------------------------------------------------------
-	
+
 	mod: function(DBM) {
 	}
-	
+
 	}; // End of module
