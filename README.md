@@ -113,7 +113,9 @@ Runs a Request to return HTML Data using a bearer Token.
  
 **Args:**
 ```url (String)``` - The URL to Check
+
 ```returnJson (Boolean)``` (Default: false) - if the data arg in the callback should be requested as JSON;
+
 ```callback (Function)``` - The URL to Check (err, statusCode, data)
 
 **Returns:** 
@@ -127,9 +129,13 @@ Runs a Request to return HTML Data using a bearer Token.
  
 **Args:** 
 ```url (String)``` - The URL
+
 ```returnJson (Boolean)``` (Default: false) - if the data arg in the callback should be requested as JSON;
+
 ```bearerToken (String)``` - The token to send with the request.
+
 ```callback (Function)``` - the callback function (err, statusCode, data)
+
 
 **Returns:** 
 ```(Void)```
@@ -144,9 +150,13 @@ Runs a Request to return HTML Data using a bearer Token.
  
 **Args:** 
 ```url (String)``` - The URL
+
 ```returnJson (Boolean)``` (Default: false) - if the data arg in the callback should be requested as JSON;
+
 ```username (String)``` - The username to send with the request.
+
 ```password (String)``` - The password to send with the request.
+
 ```callback (Function)``` - the callback function (err, statusCode, data)
 
 **Returns:** 
