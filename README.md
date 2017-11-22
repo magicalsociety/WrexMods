@@ -71,6 +71,12 @@ Usable in DBM Actions and the Run Script Action by requiring '../js/WrexMODS.js'
 
 ```javascript
     var WrexMODS = require("../js/WrexMods.js")
+    
+    // Set DBM to WrexMods.DBM ( I'll change it to a better way when I figure it out! )
+    if(!WrexMODS.DBM) {
+       WrexMODS.DBM = this.getDBM();
+    }
+     
 ```
 
  ## Functions
