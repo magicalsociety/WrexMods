@@ -146,9 +146,7 @@ module.exports = {
 			WrexMODS.runPublicRequest(url,true, function(error, statusCode, jsonData){
 
 				try {
-					let outputPath = path;
-					
-
+				
 					if(error){
 						var errorJson = JSON.stringify({error, statusCode})
 						_this.storeValue(errorJson, storage, varName, cache);
@@ -159,6 +157,8 @@ module.exports = {
 						if(path){	
 							var outData = WrexMODS.jsonPath(jsonData, path);
 							
+							console.log(outData);
+
 							try {
 								var test = JSON.parse(JSON.stringify(outData));
 							} catch (error) {
@@ -169,12 +169,11 @@ module.exports = {
 
 							var outValue = eval(JSON.stringify(outData), cache);
 
-							if(!outValue.success){
-								var errorJson = JSON.stringify({success: false})
+							if(outData.success != null){
+								var errorJson = JSON.stringify({error: error, statusCode: statusCode, success: false})
 								_this.storeValue(errorJson, storage, varName, cache);
 								console.log("WebAPI: Error Invalid JSON, is the Path set correctly? [" + path + "]");
 							}else{
-								console.log(outValue);
 								_this.storeValue(outValue, storage, varName, cache);
 								console.log("WebAPI: JSON Data values starting from ["+ path +"] stored to: ["+ varName+"]");
 							}

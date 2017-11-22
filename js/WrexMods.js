@@ -84,7 +84,7 @@ WrexMODS.runPublicRequest = function (url, returnJson = false, callback){
 	request.get({
 		url: url,
 		json: returnJson,
-		headers: {'User-Agent': 'request'}
+		headers: {'User-Agent': 'Other'}
 	  }, (err, res, data) => {    
 
         var statusCode = res.statusCode;
@@ -111,7 +111,7 @@ WrexMODS.runBearerTokenRequest = function (url, returnJson = false, bearerToken,
 		auth: {
 			bearer: bearerToken
 		  },
-		headers: {'User-Agent': 'request'}
+		headers: {'User-Agent': 'Other'}
 		}, (err, res, data) => {    
 
 		var statusCode = res.statusCode;
@@ -139,7 +139,7 @@ WrexMODS.runBasicAuthRequest = function (url, returnJson = false, username, pass
 			pass: password,
 			sendImmediately: false
 		  },
-		headers: {'User-Agent': 'request'}
+		headers: {'User-Agent': 'Other'}
 		}, (err, res, data) => {    
 
 		var statusCode = res.statusCode;
