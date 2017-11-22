@@ -91,9 +91,9 @@ module.exports = {
 		<input id="url" class="round"  style="width: 90%; type="text";><br>  
 	</div>
 	</div><br>
-		Initial JSON Path: (Leave blank to store everything)<br>
-		<input id="path" class="round"; style="width: 75%; type="text";><br>  
-	<div><br><br> 
+		Initial JSON Path: (Leave blank to store everything, supports the usage of <a href="http://goessner.net/articles/JsonPath/index.html#e2" target="_blank">JSON Path (Regex)</a>)<br>
+		<input id="path" class="round"; style="width: 75%; type="text";>
+	<div><br>
 	<div style="float: left; width: 35%;">
 		Store In:<br>
 		<select id="storage" class="round" onchange="glob.variableChange(this, 'varNameContainer')">
