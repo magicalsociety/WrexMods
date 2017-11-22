@@ -147,7 +147,7 @@ module.exports = {
 
 		if(WrexMODS.checkURL(url)){
 
-			WrexMODS.runJSONRequest(url, function(error, statusCode, jsonData){
+			WrexMODS.runPublicRequest(url, true,function(error, statusCode, jsonData){
 
 				let result;
 
