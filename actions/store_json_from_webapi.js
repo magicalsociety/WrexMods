@@ -129,62 +129,74 @@ module.exports = {
 	//---------------------------------------------------------------------
 	
 	action: function(cache) {
-
 		var _this = this;
 
 		var WrexMODS = require("../js/WrexMods.js");
-
 		WrexMODS.DBM = this.getDBM();
 
-		const data = cache.actions[cache.index];
-		
+		const data = cache.actions[cache.index];		
 		const varName = this.evalMessage(data.varName, cache);
 		const storage = parseInt(data.storage);
 		const url = this.evalMessage(data.url, cache);
 		const path = this.evalMessage(data.path, cache);
-						
-		var errorFound = false;
+					
 
 		if(WrexMODS.checkURL(url)){
 
-			WrexMODS.runPublicRequest(url, true,function(error, statusCode, jsonData){
+			WrexMODS.runPublicRequest(url,true, function(error, statusCode, jsonData){
 
-				let result;
+				try {
+					let outputPath = path;
+					
 
-				if(error){
-					errorFound = true;
-					DisplayError("WebAPI: HTTP Error: " + err);
-				}
-	
-				if(statusCode !== 200){
-					errorFound = true;
-					DisplayError("WebAPI: HTTP Status Code: " + statusCode);
+					if(error){
+						var errorJson = JSON.stringify({error, statusCode})
+						_this.storeValue(errorJson, storage, varName, cache);
+						
+						console.error("WebAPI: Error: " + errorJson + " stored to: ["+ varName+"]");
+					}
+					else{
+						if(path){	
+							var outData = WrexMODS.jsonPath(jsonData, path);
+							
+							try {
+								var test = JSON.parse(JSON.stringify(outData));
+							} catch (error) {
+								var errorJson = JSON.stringify({error: error, statusCode: statusCode, success: false})
+								_this.storeValue(errorJson, storage, varName, cache);
+								console.error(error.stack ? error.stack : error);
+							}
+
+							var outValue = eval(JSON.stringify(outData), cache);
+
+							if(!outValue.success){
+								var errorJson = JSON.stringify({success: false})
+								_this.storeValue(errorJson, storage, varName, cache);
+								console.log("WebAPI: Error Invalid JSON, is the Path set correctly? [" + path + "]");
+							}else{
+								console.log(outValue);
+								_this.storeValue(outValue, storage, varName, cache);
+								console.log("WebAPI: JSON Data values starting from ["+ path +"] stored to: ["+ varName+"]");
+							}
+																				
+						}else{
+							_this.storeValue(jsonData, storage, varName, cache);	
+							console.log("WebAPI: JSON Data Object stored to: ["+ varName+"]");
+						}
+					}
+												
+					if(data.behavior === "0") {
+						_this.callNextAction(cache);
+					}
+				} catch (err) {
+					console.error(err.stack ? err.stack : err);
 				}
 				
-				if(path){
-					_this.storeValue(eval("jsonData." + path, cache), storage, varName, cache);
-					console.log("JSON Data Object starting from ["+ path +"] stored to: ["+ varName+"]");
-				}else{
-					_this.storeValue(jsonData, storage, varName, cache);	
-					console.log("JSON Data Object stored to: ["+ varName+"]");
-				}
-				
-				
-
-				if(!errorFound && data.behavior === "0") {
-					_this.callNextAction(cache);
-				}
 
 			});		
 		}
 		else{
-			DisplayError('URL ['+url+'] Is Not Valid');
-		}
-
-		function DisplayError(err){
-			
-			console.log(err);
-			_this.displayError(data, cache, err);
+			console.error('URL ['+url+'] Is Not Valid');
 		}
 	},
 	
