@@ -6,7 +6,7 @@
 Usable in DBM Actions and the Run Script Action by requiring '../js/WrexMODS.js'
 
 ```javascript
-    var WrexMODS = require("")
+    var WrexMODS = require("../js/WrexMods.js")
 ```
 
  ## Functions
