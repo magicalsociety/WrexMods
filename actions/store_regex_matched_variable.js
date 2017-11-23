@@ -174,15 +174,15 @@ module.exports = {
                                     if (outputData) {
                                         var jsonData = JSON.stringify(outputData)
 
-                                        console.log("Store Regex Match: Replacement Stored as JSON: " + jsonData);
+                                        console.log("Store Regex Match: Match Stored as JSON: " + jsonData);
 
-                                        console.log('Match Results;');
+                                        console.log('Match Results;\r\n');
 
                                         for (i = 0; i < outputData.length; i++) {
                                             console.log('[' + i + '] = ' + outputData[i]);
                                         }
 
-                                        console.log('Append the key that you want to store that value to the variable.');
+                                        console.log('\r\nAppend the key that you want to store that value to the variable.');
 
                                         const storageType = ['', 'tempVars', 'serverVars', 'globalVars'];
                                         var out = storageType[storage]
