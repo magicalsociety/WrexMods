@@ -96,7 +96,7 @@ module.exports = {
 		<input id="jsonObjectVarName" class="round"  style="width: 90%; type="text";><br>  
 	</div>
 	</div><br>
-		JSON Path: <br>
+		JSON Path: (supports the usage of <a href="http://goessner.net/articles/JsonPath/index.html#e2" target="_blank">JSON Path (Regex)</a>))<br>
 		<input id="path" class="round"; style="width: 75%; type="text";><br>  
 	<div><br><br> 
 	<div style="float: left; width: 35%;">
@@ -135,6 +135,9 @@ module.exports = {
 	
 	action: function(cache) {
 
+		var WrexMODS = require("../js/WrexMods.js");
+		WrexMODS.DBM = this.getDBM();
+
 		const data = cache.actions[cache.index];
 		let result;
 		const varName = this.evalMessage(data.varName, cache);
@@ -143,23 +146,46 @@ module.exports = {
         const path = this.evalMessage(data.path, cache);
         
         const jsonData = this.getVariable(storage, jsonObjectVarName, cache);
-        
-        if(path && jsonData){           
-            result = eval("jsonData." + path, cache);	
+				
+		try 
+		{
+			
+			if(path && jsonData){
+					
+				var outData = WrexMODS.jsonPath(jsonData, path);
+								
+				try {
+					var test = JSON.parse(JSON.stringify(outData));
+				} catch (error) {
+					var errorJson = JSON.stringify({error: error, success: false})
+					this.storeValue(errorJson, storage, varName, cache);
+					console.error(error.stack ? error.stack : error);
+				}
 
-            console.log("JSON Data starting from ["+ path +"] stored to: ["+ varName+"]");
-            		            
-        }
-        else{
-            console.log("JSON WebAPI Parsing: JSON Data does not exist in ["+ jsonObjectVarName +"]");
-        }
+				var outValue = eval(JSON.stringify(outData), cache);
 
-        this.storeValue(result, storage, varName, cache);	
+				console.log(outData);
 
-        if(data.behavior === "0") {
-            this.callNextAction(cache);
-        }
-		
+				if(outData.success != null){
+					var errorJson = JSON.stringify({error: error, statusCode: statusCode, success: false})
+					this.storeValue(errorJson, storage, varName, cache);
+					console.log("WebAPI Parser: Error Invalid JSON, is the Path set correctly? [" + path + "]");
+				}else{
+					this.storeValue(outValue, storage, varName, cache);
+					console.log("WebAPI Parser: JSON Data values starting from ["+ path +"] stored to: ["+ varName+"]");
+				}																	
+			}
+															
+		} catch (err) {
+			var errorJson = JSON.stringify({error, statusCode})
+			this.storeValue(errorJson, storage, varName, cache);
+				
+			console.error("WebAPI Parser: Error: " + errorJson + " stored to: ["+ varName+"]");
+		}
+
+		if(data.behavior === "0") {
+			this.callNextAction(cache);
+		}		
 	},
 	
 	//---------------------------------------------------------------------
