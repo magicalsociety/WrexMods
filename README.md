@@ -1,4 +1,30 @@
 # WrexMODS - Mods for Discord Bot Maker
+
+ These mods are added to DBM Mods https://github.com/LasseNiermann/DBM-Mods when the major bugs are worked out!
+
+
+# Installation: 
+
+Choose the one you need from Release or download the entire zip here, just remember to copy actions, js, and node_modules to both your bot project folder and DBM's main folder.
+
+Extract the folder in Discord Bot Makers base directory
+ ex. "steamapps\common\Discord Bot Maker <-"
+
+Restart Discord Bot Maker
+
+Remember to extract it in your projects directory as well if you want it in your bot!
+
+----
+
+# WrexMODS - Store Regex Matched Variable
+https://github.com/generalwrex/WrexMods/blob/master/actions/store_regex_matched_variable.js
+
+ Use regex match ( or regex replace ) on an existing variable to store a new variable, watch the bot console for if the regex is valid, and for the results of the matches
+ 
+![actionss](https://i.gyazo.com/4a44b760af0a5dfb89206f1f3ca5955e.png)
+
+![ui](https://i.gyazo.com/ba9d5ddf4787b5d115b235dd50ad28a7.png)
+ 
 ----
 
 # WrexMODS - JSON WebAPI Parsing Section
@@ -12,23 +38,8 @@ https://dbotmaker.io/forums/threads/create-variable-from-json-webapi.85/
      * added console logging to print what's going on in your bots console.
 
 
- # Installation: 
+**WEBAPI  - Using API Keys in google's json webapi is appending** ```?key=[keygoeshere]``` ** to the end of your Google API url, google how to create a API key in googles developer console for how to create a key**
 
-Choose the one you need from Release
-
-Extract the folder in Discord Bot Makers base directory
- ex. "steamapps\common\Discord Bot Maker <-"
-
-Restart Discord Bot Maker
-
-Remember to extract it in your projects directory as well if you want it in your bot!
-
-
- # Contributing
-
-**Thanks to Tresmos for the help with testing!**
-
-If you want to help, just fork it out, make your changes and do a pull request!
 
 Here is a link to the github pages that contains the current menu for this action
 https://generalwrex.github.io/DBM-webapi-parsing
@@ -43,6 +54,10 @@ https://generalwrex.github.io/DBM-webapi-parsing
  
  Find out more information about JSON Path here - http://goessner.net/articles/JsonPath/index.html#e2
  Test it out here! http://jsonPath.com
+ 
+ ![jsonpathfirst](https://i.gyazo.com/f073451e1ad976860a097422c90ea754.png)
+ 
+ ![jsonpathsecond](https://i.gyazo.com/e0e07b4fa87ebe31c3b16bfbf7679697.png)
  # How to get the path
  
  Here is our example
@@ -70,6 +85,9 @@ Instead of **array.0** its **array[0]**.
 so if you wanted the path to output **"Hello World"**, you would type  **string**  into the path textbox. (removing **object.** from it)
 
 Have fun!
+ 
+ 
+ 
  
  ----
 # WrexMODS - A Module for DBM containing custom Functions
@@ -182,3 +200,9 @@ Runs a Request to return JSON data of the provided URL
 
 
 ----
+
+ # Contributing
+
+**Thanks to Tresmos for the help with testing!**
+
+If you want to help, just fork it out, make your changes and do a pull request!
