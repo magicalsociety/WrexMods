@@ -7,6 +7,7 @@
 https://dbotmaker.io/forums/threads/create-variable-from-json-webapi.85/
 
  # Changes
+     * Now supports the use of JsonPATH in both Store and Parse 
      * Can now use variables in the URL and Path textboxes.
      * added console logging to print what's going on in your bots console.
 
@@ -37,6 +38,11 @@ https://generalwrex.github.io/DBM-webapi-parsing
     You can find it here!
     https://github.com/generalwrex/DBM-WebAPI-Parser-PathFinder
 
+
+ # JSON Path
+ 
+ Find out more information about JSON Path here - http://goessner.net/articles/JsonPath/index.html#e2
+ Test it out here! http://jsonPath.com
  # How to get the path
  
  Here is our example
@@ -85,7 +91,7 @@ Usable in DBM Actions and the Run Script Action by requiring '../js/WrexMODS.js'
  ### CheckAndInstallNodeModule
  
 **Description:** 
-Installs a Node Module locally to the DBM/Bot 'node_modules' folder.
+Installs a Node Module locally to the DBM/Bot 'node_modules' folder. Note: Sometimes it doesn't work right in Run Script, the command might need to be ran twice, the first one to install, then it should work from then on.
 
 **Args:** 
 ```modulename``` - The name of the module.
@@ -115,10 +121,10 @@ Checks if the provided URL is valid.
  ### runPublicRequest
  
 **Description:** 
-Runs a Request to return HTML Data using a bearer Token.
+Runs a Request to return JSON data of the provided URL
  
 **Args:**
-```url (String)``` - The URL to Check
+```url (String)``` - The URL to get the data from
 
 ```returnJson (Boolean)``` (Default: false) - if the data arg in the callback should be requested as JSON;
 
