@@ -17,6 +17,8 @@ Remember to extract it in your projects directory as well if you want it in your
 ----
 
 # WrexMODS - Store Regex Matched Variable
+https://github.com/generalwrex/WrexMods/blob/master/actions/store_regex_matched_variable.js
+
  Use regex match ( or regex replace ) on an existing variable to store a new variable, watch the bot console for if the regex is valid, and for the results of the matches
  
 ![actionss](https://i.gyazo.com/4a44b760af0a5dfb89206f1f3ca5955e.png)
