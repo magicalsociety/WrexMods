@@ -1,9 +1,13 @@
-# DBM-webapi-parsing
+# WrexMODS - Mods for Discord Bot Maker
+----
+
+# WrexMODS - JSON WebAPI Parsing Section
 
 # Forum topic and example
 https://dbotmaker.io/forums/threads/create-variable-from-json-webapi.85/
 
  # Changes
+     * Now supports the use of JsonPATH in both Store and Parse 
      * Can now use variables in the URL and Path textboxes.
      * added console logging to print what's going on in your bots console.
 
@@ -34,6 +38,11 @@ https://generalwrex.github.io/DBM-webapi-parsing
     You can find it here!
     https://github.com/generalwrex/DBM-WebAPI-Parser-PathFinder
 
+
+ # JSON Path
+ 
+ Find out more information about JSON Path here - http://goessner.net/articles/JsonPath/index.html#e2
+ Test it out here! http://jsonPath.com
  # How to get the path
  
  Here is our example
@@ -62,4 +71,114 @@ so if you wanted the path to output **"Hello World"**, you would type  **string*
 
 Have fun!
  
+ ----
+# WrexMODS - A Module for DBM containing custom Functions
+Usable in DBM Actions and the Run Script Action by requiring '../js/WrexMODS.js'
+
+```javascript
+    var WrexMODS = require("../js/WrexMods.js")
+    
+    // Set DBM to WrexMods.DBM ( I'll change it to a better way when I figure it out! )
+    if(!WrexMODS.DBM) {
+       WrexMODS.DBM = this.getDBM();
+    }
+     
+```
+
+ ## Functions
  
+ 
+ ### CheckAndInstallNodeModule
+ 
+**Description:** 
+Installs a Node Module locally to the DBM/Bot 'node_modules' folder. Note: Sometimes it doesn't work right in Run Script, the command might need to be ran twice, the first one to install, then it should work from then on.
+
+**Args:** 
+```modulename``` - The name of the module.
+
+**Returns** 
+```void```
+
+```javascript
+    WrexMODS.CheckAndInstallNodeModule(modulename);    
+```
+
+ ### checkURL
+ 
+**Description:** 
+Checks if the provided URL is valid.
+ 
+**Args:** 
+```url``` - The URL to Check;
+
+**Returns:** 
+```(Boolean)``` ```true``` if the url is valid.
+
+```javascript
+    WrexMODS.checkURL(url)   
+```
+
+ ### runPublicRequest
+ 
+**Description:** 
+Runs a Request to return JSON data of the provided URL
+ 
+**Args:**
+```url (String)``` - The URL to get the data from
+
+```returnJson (Boolean)``` (Default: false) - if the data arg in the callback should be requested as JSON;
+
+```callback (Function)``` - The URL to Check (err, statusCode, data)
+
+**Returns:** 
+```(Void)```
+
+```javascript
+    WrexMODS.runPublicRequest(url, returnJson, callback) 
+```
+
+ ### runBearerTokenRequest
+ 
+**Args:** 
+```url (String)``` - The URL
+
+```returnJson (Boolean)``` (Default: false) - if the data arg in the callback should be requested as JSON;
+
+```bearerToken (String)``` - The token to send with the request.
+
+```callback (Function)``` - the callback function (err, statusCode, data)
+
+
+**Returns:** 
+```(Void)```
+
+**Description:** Checks if the provided URL is valid.
+
+```javascript
+    WrexMODS.runBearerTokenRequest(url, returnJson, bearerToken, callback)
+```
+
+ ### runBasicAuthRequest
+ 
+**Args:** 
+```url (String)``` - The URL
+
+```returnJson (Boolean)``` (Default: false) - if the data arg in the callback should be requested as JSON;
+
+```username (String)``` - The username to send with the request.
+
+```password (String)``` - The password to send with the request.
+
+```callback (Function)``` - the callback function (err, statusCode, data)
+
+**Returns:** 
+```(Void)```
+
+**Description:** Checks if the provided URL is valid.
+
+```javascript
+    WrexMODS.runBasicAuthRequest(url, returnJson = false, username, password, callback)
+```
+
+
+----
