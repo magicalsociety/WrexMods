@@ -29,6 +29,15 @@ module.exports = {
 	section: "JSON WebAPI Parsing",
 	
 	//---------------------------------------------------------------------
+    // Dependencies Section
+    //
+    // If your action requires any node modules, add them here.
+    //---------------------------------------------------------------------
+    
+    dependencies: ["request", "valid-url"],
+
+
+	//---------------------------------------------------------------------
 	// Action Subtitle
 	//
 	// This function generates the subtitle displayed next to the name.
@@ -174,8 +183,15 @@ module.exports = {
 								_this.storeValue(errorJson, storage, varName, cache);
 								console.log("WebAPI: Error Invalid JSON, is the Path set correctly? [" + path + "]");
 							}else{
-								_this.storeValue(outValue, storage, varName, cache);
-								console.log("WebAPI: JSON Data values starting from ["+ path +"] stored to: ["+ varName+"]");
+								if(outValue.success != null || !outValue){
+									var errorJson = JSON.stringify({error: error, statusCode: statusCode, success: false})
+									_this.storeValue(errorJson, storage, varName, cache);
+									console.log("WebAPI: Error Invalid JSON, is the Path set correctly? [" + path + "]");
+								}else{
+									_this.storeValue(outValue, storage, varName, cache);
+									console.log("WebAPI: JSON Data values starting from ["+ path +"] stored to: ["+ varName+"]");
+								}
+
 							}
 																				
 						}else{
@@ -210,6 +226,11 @@ module.exports = {
 	
 	mod: function(DBM) {
 		var WrexMODS = require("../js/WrexMods.js");
+		WrexMODS.DBM = DBM;
+
+		WrexMODS.CheckAndInstallNodeModule("valid-url");
+		WrexMODS.CheckAndInstallNodeModule("request");
+		WrexMODS.CheckAndInstallNodeModule("valid-url");
 	}
 
 	}; // End of module
