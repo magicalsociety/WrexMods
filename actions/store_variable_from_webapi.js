@@ -18,7 +18,7 @@ module.exports = {
 	// This is the name of the action displayed in the editor.
 	//---------------------------------------------------------------------
 
-	name: "Store Variable From WebAPI 2",
+	name: "Store Variable From WebAPI",
 
 	//---------------------------------------------------------------------
 	// Action Section
@@ -26,8 +26,17 @@ module.exports = {
 	// This is the section the action will fall into.
 	//---------------------------------------------------------------------
 
-	section: "JSON WebAPI Parsing",
+    section: "JSON WebAPI Parsing",
 
+	//---------------------------------------------------------------------
+    // Dependencies Section
+    //
+    // If your action requires any node modules, add them here.
+    //---------------------------------------------------------------------
+    
+    dependencies: ["request"],
+	
+	
 	//---------------------------------------------------------------------
 	// Action Subtitle
 	//
@@ -58,7 +67,7 @@ module.exports = {
 	// are also the names of the fields stored in the action's JSON data.
 	//---------------------------------------------------------------------
 
-	fields: ["behavior", "url", "path", "storage", "varName", "varNameContainer"],
+	fields: ["behavior", "url", "path", "storage", "varName"],
 
 	//---------------------------------------------------------------------
 	// Command HTML
@@ -79,18 +88,26 @@ module.exports = {
 	html: function(isEvent, data) {
 		return `
 	<div>
+		<p>
+			<u>Note:</u><br>
+			Follow this guide to get help: http://bit.ly/2mDXAeY
+		</p>
+	</div><br>
+	<div style="float: left; width: 75%;">
+	<div>
 		End Behavior:<br>
 		<select id="behavior" class="round">
 			<option value="0" selected>Call Next Action Automatically</option>
 			<option value="1">Do Not Call Next Action</option>
 		</select>
 	<div><br>
-		WebAPI URL:
-		<input id="url" class="round"  style="width: 90%; type="text";>
+		WebAPI URL:  <br>
+		<input id="url" class="round"  style="width: 90%; type="text";><br>
 	</div>
-	<div><br>
-		JSON Path:
+	</div><br>
+		JSON Path:  <br>
 		<input id="path" class="round"; style="width: 75%; type="text";><br>
+	<div><br>
 	<div style="float: left; width: 35%;">
 		Store In:<br>
 		<select id="storage" class="round" onchange="glob.variableChange(this, 'varNameContainer')">
@@ -100,6 +117,7 @@ module.exports = {
 	<div id="varNameContainer" style="display: none; float: right; width: 60%;">
 		Variable Name:<br>
 		<input id="varName" class="round" type="text">
+	</div>
 	</div>`
 	},
 
@@ -151,7 +169,6 @@ module.exports = {
 					  this.storeValue(result, storage, varName, cache);
 					} else {
 					  result = eval("jsonData." + path, cache);
-					  console.log("The Parse result returned: " + result);
 					  this.storeValue(result, storage, varName, cache);
 					  if(data.behavior === "0") {
 						  this.callNextAction(cache);

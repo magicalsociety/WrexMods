@@ -152,8 +152,21 @@ module.exports = {
 			
 			if(path && jsonData){
 					
+
 				var outData = WrexMODS.jsonPath(jsonData, path);
-								
+						
+				// if it dont work, try to go backwards one path
+				if(outData == false){
+					outData = WrexMODS.jsonPath(jsonData, "$." + path);
+				}
+
+				// if it still dont work, try to go backwards two paths
+				if(outData == false){
+					outData = WrexMODS.jsonPath(jsonData, "$.." + path);
+				}
+
+				console.log(outData);
+
 				try {
 					var test = JSON.parse(JSON.stringify(outData));
 				} catch (error) {
@@ -164,20 +177,26 @@ module.exports = {
 
 				var outValue = eval(JSON.stringify(outData), cache);
 
-				console.log(outData);
 
-				if(outData.success != null){
-					var errorJson = JSON.stringify({error: error, statusCode: statusCode, success: false})
+				if(outData.success != null || outValue.success != null){
+					var errorJson = JSON.stringify({error: "error", statusCode: 0, success: false})
 					this.storeValue(errorJson, storage, varName, cache);
 					console.log("WebAPI Parser: Error Invalid JSON, is the Path set correctly? [" + path + "]");
 				}else{
-					this.storeValue(outValue, storage, varName, cache);
-					console.log("WebAPI Parser: JSON Data values starting from ["+ path +"] stored to: ["+ varName+"]");
+					if(outValue.success != null || !outValue){
+						var errorJson = JSON.stringify({error: error, statusCode: statusCode, success: false})
+						this.storeValue(errorJson, storage, varName, cache);
+						console.log("WebAPI Parser: Error Invalid JSON, is the Path set correctly? [" + path + "]");
+					}else{
+						this.storeValue(outValue, storage, varName, cache);
+						console.log("WebAPI Parser: JSON Data values starting from ["+ path +"] stored to: ["+ varName+"]");
+					}
+					
 				}																	
 			}
 															
-		} catch (err) {
-			var errorJson = JSON.stringify({error, statusCode})
+		} catch (error) {
+			var errorJson = JSON.stringify({error: error, statusCode : 0, success: false})
 			this.storeValue(errorJson, storage, varName, cache);
 				
 			console.error("WebAPI Parser: Error: " + errorJson + " stored to: ["+ varName+"]");
