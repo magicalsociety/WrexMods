@@ -1,4 +1,6 @@
 # WrexMODS - Mods for Discord Bot Maker
+
+These mods are added to DBM Mods https://github.com/LasseNiermann/DBM-Mods when the major bugs are worked out!
 ----
 
 # WrexMODS - JSON WebAPI Parsing Section
