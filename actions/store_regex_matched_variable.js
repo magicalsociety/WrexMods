@@ -1,32 +1,32 @@
 module.exports = {
-    
+
         //---------------------------------------------------------------------
         // Action Name
         //
         // This is the name of the action displayed in the editor.
         //---------------------------------------------------------------------
-    
+
         name: "Store Regex Matched Variable",
-    
+
         //---------------------------------------------------------------------
         // Action Section
         //
         // This is the section the action will fall into.
         //---------------------------------------------------------------------
-    
+
         section: "Mods by General Wrex",
-    
+
         //---------------------------------------------------------------------
         // Action Subtitle
         //
         // This function generates the subtitle displayed next to the name.
         //---------------------------------------------------------------------
-    
+
         subtitle: function(data) {
             const storage = ['', 'Temp Variable', 'Server Variable', 'Global Variable'];
             return ` (${data.typeVariable}) ~Var: ${storage[parseInt(data.storage)]} (${data.varName})`;
         },
-    
+
         //---------------------------------------------------------------------
         // Action Storage Function
         //
@@ -35,10 +35,10 @@ module.exports = {
         variableStorage: function(data, varType) {
             const type = parseInt(data.storage);
             if (type !== varType) return;
-    
+
             return ([data.varName, 'Unknown Type']);
         },
-    
+
         //---------------------------------------------------------------------
         // Action Fields
         //
@@ -46,25 +46,25 @@ module.exports = {
         // by creating elements with corresponding IDs in the HTML. These
         // are also the names of the fields stored in the action's JSON data.
         //---------------------------------------------------------------------
-    
+
         fields: ["behavior", "inputStorage", "inputVarName", "theType", "typeVariable", "storage", "varName"],
-    
+
         //---------------------------------------------------------------------
         // Command HTML
         //
         // This function returns a string containing the HTML used for
-        // editting actions. 
+        // editting actions.
         //
         // The "isEvent" parameter will be true if this action is being used
-        // for an event. Due to their nature, events lack certain information, 
+        // for an event. Due to their nature, events lack certain information,
         // so edit the HTML to reflect this.
         //
-        // The "data" parameter stores constants for select elements to use. 
+        // The "data" parameter stores constants for select elements to use.
         // Each is an array: index 0 for commands, index 1 for events.
-        // The names are: sendTargets, members, roles, channels, 
+        // The names are: sendTargets, members, roles, channels,
         //                messages, servers, variables
         //---------------------------------------------------------------------
-    
+
         html: function(isEvent, data) {
             return `
             <div>
@@ -93,12 +93,12 @@ module.exports = {
                <div style="float: left; width: 25%;">
                   <br><br>
                   Type:<br>
-                  <select id="theType" class="round" onchange="glob.variableChange(this, 'typeContainer')">
+                  <select id="theType" class="round" onchange="">
                      <option value="0" selected>Regex Match</option>
-                     <option value="1" selected>Regex Replace</option>
+                     <option value="1">Regex Replace</option>
                   </select>
                </div>
-               <div id="typeContainer" style="display: ; float: right; width: 70%;"><br><br> 
+               <div id="typeContainer" style="display: ; float: right; width: 70%;"><br><br>
                   Match: (Regex Builder)<a href="http://buildregex.com/" target="_blank">http://buildregex.com/</a>)<br>
                   <input id="typeVariable" class="round" type="text">
                </div>
@@ -117,7 +117,7 @@ module.exports = {
             </div>
          </div>`
         },
-    
+
         //---------------------------------------------------------------------
         // Action Editor Init Code
         //
@@ -125,7 +125,7 @@ module.exports = {
         // is also run. This helps add modifications or setup reactionary
         // functions for the DOM elements.
         //---------------------------------------------------------------------
-    
+
         init: function() {
             const {
                 glob,
@@ -134,43 +134,43 @@ module.exports = {
             glob.variableChange(document.getElementById('inputStorage'), 'inputVarNameContainer');
             glob.variableChange(document.getElementById('storage'), 'varNameContainer');
         },
-    
+
         //---------------------------------------------------------------------
         // Action Bot Function
         //
         // This is the function for the action within the Bot's Action class.
-        // Keep in mind event calls won't have access to the "msg" parameter, 
+        // Keep in mind event calls won't have access to the "msg" parameter,
         // so be sure to provide checks for variable existance.
         //---------------------------------------------------------------------
-    
+
         action: function(cache) {
-    
+
             const data = cache.actions[cache.index];
-    
+
             const inputStorage = parseInt(data.inputStorage);
             const storage = parseInt(data.storage);
             const type = parseInt(data.theType);
-    
+
             const inputVarName = this.evalMessage(data.inputVarName, cache);
             const typeVariable = this.evalMessage(data.typeVariable, cache);
             const varName = this.evalMessage(data.varName, cache);
-    
+
             var inputData = this.getVariable(inputStorage, inputVarName, cache);
-    
+
             if (inputData) {
-    
+
                 switch (type) {
                     case 0:
                         try {
                             if (typeVariable) {
-    
+
                                 var regex = new RegExp(typeVariable, 'i');
-    
+
                                 if (regex.test(inputData)) {
                                     console.log("Store Regex Match: Valid Regex (RegEx String: " + typeVariable + ")");
-    
+
                                     var outputData = inputData.match(regex);
-    
+
                                     if (outputData) {
                                         var jsonData = JSON.stringify(outputData)
 
@@ -189,10 +189,10 @@ module.exports = {
 
                                         console.log('Example ${'+out+'("'+ varName +'")} to ${'+out+'("'+ varName +'")[key]}');
                                         console.log(''+ varName +'[key] if not using it as a template');
-                                        this.storeValue(this.eval(jsonData, cache), storage, varName, cache);                                    
+                                        this.storeValue(this.eval(jsonData, cache), storage, varName, cache);
                                     }
-    
-    
+
+
                                 } else {
                                     console.log("Store Regex Match: Invalid Regex: (RegEx String: " + typeVariable + ")");
                                     this.storeValue(this.eval(outputData, cache), storage, varName, cache);
@@ -203,39 +203,39 @@ module.exports = {
                         }
                         break;
                     case 1:
-    
+
                         try {
                             if (typeVariable) {
-    
+
                                 var regex = new RegExp(typeVariable, 'g');
-    
+
                                 console.log("Store Regex Match: Replacing With: " + typeVariable);
-    
+
                                 if (inputData) {
-                                      
+
                                     var outputData = inputData.replace(regex, typeVariable);
-    
+
                                     if (outputData) {
                                         var jsonData = JSON.stringify(outputData)
                                         console.log("Store Regex Match: Stored as JSON: " + jsonData);
-                                        this.storeValue(this.eval(jsonData, cache), storage, varName, cache);                                     
+                                        this.storeValue(this.eval(jsonData, cache), storage, varName, cache);
                                     }
-    
-                                }   
+
+                                }
                             }
-    
+
                         } catch (error) {
                             console.error("Store Regex Match: Error " + error);
                         }
-                        break;   
+                        break;
                 }
             }
-    
+
             if (data.behavior === "0") {
                 this.callNextAction(cache);
             }
         },
-    
+
         //---------------------------------------------------------------------
         // Action Bot Mod
         //
@@ -244,7 +244,7 @@ module.exports = {
         // In order to reduce conflictions between mods, be sure to alias
         // functions you wish to overwrite.
         //---------------------------------------------------------------------
-    
+
         mod: function(DBM) {}
-    
+
     }; // End of module
