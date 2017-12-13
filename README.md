@@ -1,7 +1,8 @@
 # WrexMODS - Mods for Discord Bot Maker
 
- These mods are added to DBM Mods https://github.com/LasseNiermann/DBM-Mods when the major bugs are worked out!
+# These mods are now part of DBM Mods, you can find them here https://github.com/Discord-Bot-Maker-Mods/DBM-Mods
 
+**Find them there!**
 
 # Installation: 
 
