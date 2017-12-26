@@ -1,4 +1,4 @@
-throw "THIS ACTION IS NO LONGER SUPPORTED. CHANGE TO 'Store Json From WebAPI', remove 'store_variable_from_webapi.js' to continue.
+throw "THIS ACTION IS NO LONGER SUPPORTED. CHANGE TO 'Store Json From WebAPI', remove 'store_variable_from_webapi.js' to continue.";
 
 module.exports = {
 	//---------------------------------------------------------------------
